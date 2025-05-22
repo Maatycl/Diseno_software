@@ -1,4 +1,4 @@
-
+import os
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.platypus import Table, TableStyle
@@ -6,8 +6,15 @@ from reportlab.lib import colors
 from datetime import datetime
 
 def generar_pdf_boleta(cliente, carrito):
+    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    carpeta_boletas = os.path.join(base_dir, "boletas")
+    os.makedirs(carpeta_boletas, exist_ok=True)
+
     fecha_creacion = datetime.now()
-    archivo_pdf = f"boleta_{cliente.nombre}_{fecha_creacion.strftime('%Y-%m-%d_%H-%M-%S')}.pdf"
+    archivo_pdf = os.path.join(
+        carpeta_boletas,
+        f"boleta_{cliente.nombre}_{fecha_creacion.strftime('%Y-%m-%d_%H-%M-%S')}.pdf"
+    )
 
     c = canvas.Canvas(archivo_pdf, pagesize=letter)
     width, height = letter

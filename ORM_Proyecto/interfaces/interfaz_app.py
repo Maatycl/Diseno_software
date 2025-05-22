@@ -1,8 +1,8 @@
 import customtkinter as ctk
 from tkinter import ttk, messagebox
-from logica_app import LogicaApp
+from logicas.logica_app import LogicaApp
+from interfaces.cliente_interfaz import ClienteApp
 import os
-
 
 class InterfazApp:
     def __init__(self, app):
@@ -51,6 +51,9 @@ class InterfazApp:
 
         # Cargar los ingredientes al Treeview
         self.cargar_ingredientes_treeview()
+
+    def abrir_cliente(self):
+        ClienteApp(self.app)  # Se abre como Toplevel
 
     def cargar_ingredientes_treeview(self):
         """Carga los ingredientes en el Treeview."""
@@ -145,7 +148,7 @@ class InterfazApp:
         self.treeview_menu_ingredientes2.heading("Cantidad", text="Cantidad")
         self.treeview_menu_ingredientes2.pack(pady=10, padx=10, fill="both", expand=True)
 
-        self.actualizar_combobox_ingredientes() 
+        self.actualizar_ingredientes_combobox() 
 
     def crear_menu(self):
         """Crea un objeto Menu usando LogicaApp y limpia la interfaz."""
@@ -186,14 +189,14 @@ class InterfazApp:
             messagebox.showerror("Error", f"Ocurrió un error al crear el menú: {e}")
 
 
-    def actualizar_combobox_ingredientes(self):
+    def actualizar_ingredientes_combobox(self):
         """Actualiza el Combobox usando la lógica de negocio."""
         nuevos_valores = LogicaApp.obtener_nombres_ingredientes()
 
-        if self.combobox_ingredientes["values"] != tuple(nuevos_valores):
+        if self.combobox_ingredientes.cget("values") != tuple(nuevos_valores):
             self.combobox_ingredientes["values"] = nuevos_valores
 
-        self.app.after(1000, self.actualizar_combobox_ingredientes)
+        self.app.after(1000, self.actualizar_ingredientes_combobox)
 
 
     def agregar_ingrediente(self):
@@ -353,6 +356,9 @@ class InterfazApp:
             frame_superior = ctk.CTkFrame(parent)
             frame_superior.pack(pady=10, padx=10, fill="x")
 
+            btn_cliente = ctk.CTkButton(frame_superior, text="Abrir Cliente", command=self.abrir_cliente)
+            btn_cliente.grid(row=0, column=8, padx=10, pady=10)
+
             ctk.CTkLabel(frame_superior, text="Menú").grid(row=0, column=0, pady=10, padx=10)
             self.menu_panel = ctk.CTkComboBox(frame_superior)
             self.menu_panel.grid(row=0, column=1, pady=10, padx=10)
@@ -425,14 +431,21 @@ class InterfazApp:
         self.treeview_panel.insert("", "end", values=(cliente.email, menu.nombre, cantidad, total_precio))
 
     def actualizar_emails_combobox(self):
-        """Llena el Combobox con los emails de los clientes."""
         emails = LogicaApp.obtener_emails_clientes()
-        self.combobox_cliente_email.configure(values=emails)
+
+        if self.combobox_cliente_email.cget("values") != emails:
+            self.combobox_cliente_email.configure(values=emails)
+
+        self.app.after(1000, self.actualizar_emails_combobox)
 
     def actualizar_menu_combobox(self):
-        """Llena el Combobox con los nombres de los menús disponibles."""
+        """Llena el Combobox con los nombres de los menús disponibles y se actualiza automáticamente."""
         nombres_menus = LogicaApp.obtener_nombres_menus()
-        self.menu_panel.configure(values=nombres_menus)
+
+        if self.menu_panel.cget("values") != tuple(nombres_menus):
+            self.menu_panel.configure(values=nombres_menus)
+
+        self.app.after(1000, self.actualizar_menu_combobox)
 
 
     def crear_formulario_pedido(self, parent):
@@ -467,9 +480,12 @@ class InterfazApp:
             self.treeview_pedidos.pack(pady=10, padx=10, fill="both", expand=True)
 
     def actualizar_emails_combobox_pedidos(self):
-        """Llena el Combobox con los emails de los clientes."""
         emails = LogicaApp.obtener_emails_clientes()
-        self.combobox_cliente_email_pedido.configure(values=emails)
+
+        if self.combobox_cliente_email_pedido.cget("values") != emails:
+            self.combobox_cliente_email_pedido.configure(values=emails)
+
+        self.app.after(1000, self.actualizar_emails_combobox_pedidos)
 
     
     def cargar_pedidos_por_cliente(self, event=None):
@@ -534,8 +550,8 @@ class InterfazApp:
 
     def cargar_imagenes_en_combobox_menu(self):
         """Carga las imágenes de la carpeta Images y las asocia con nombres en el ComboBox del menú."""
-        carpeta_actual = os.path.dirname(os.path.abspath(__file__))
-        carpeta_imagenes = os.path.join(carpeta_actual, "Images")
+        proyecto_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+        carpeta_imagenes = os.path.join(proyecto_root, "Images")
 
         nombres_personalizados = ["Papas fritas", "Completo", "Hamburguesa", "Bebida"]  # Nombres personalizados
 
@@ -556,9 +572,9 @@ class InterfazApp:
 
 
     def crear_panel_estado_pedido(self, parent):
-        from database import SessionLocal
-        from models import Pedido
-        from pedido_state import obtener_estado_instancia
+        from data.database import SessionLocal
+        from models.models import Pedido
+        from utils.pedido_state import obtener_estado_instancia
 
         frame = ctk.CTkFrame(parent)
         frame.pack(pady=10, padx=10, fill="x")

@@ -1,9 +1,9 @@
-from database import get_session
+from data.database import get_session
 from crud.ingrediente_crud import IngredienteCRUD
 from crud.menu_crud import MenuCRUD
 from crud.cliente_crud import ClienteCRUD
 from crud.pedido_crud import PedidoCRUD
-from models import Menu, Ingrediente, Pedido
+from models.models import Menu, Ingrediente, Pedido
 import matplotlib.pyplot as plt
 from sqlalchemy import func
 from datetime import datetime, timedelta

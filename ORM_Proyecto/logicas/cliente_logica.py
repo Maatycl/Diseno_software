@@ -1,10 +1,10 @@
-from database import get_session
-from models import Pedido
+from data.database import get_session
+from models.models import Pedido
 from crud.cliente_crud import ClienteCRUD
 from crud.menu_crud import MenuCRUD
 from crud.pedido_crud import PedidoCRUD
 from datetime import datetime
-from generar_pdf import generar_pdf_boleta
+from utils.generar_pdf import generar_pdf_boleta
 
 class LogicaCliente:
     @staticmethod

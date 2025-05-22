@@ -1,7 +1,7 @@
 import time
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError, OperationalError
-from models import Pedido, Cliente
+from models.models import Pedido, Cliente
 
 class PedidoCRUD:
     @staticmethod

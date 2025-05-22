@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models import Cliente
+from models.models import Cliente
 
 class ClienteCRUD:
     @staticmethod

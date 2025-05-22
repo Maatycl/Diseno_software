@@ -2,14 +2,14 @@ import customtkinter as ctk
 from tkinter import messagebox, ttk
 from PIL import Image
 from customtkinter import CTkImage
-from cliente_logica import LogicaCliente
+from logicas.cliente_logica import LogicaCliente
 
 ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("blue")
 
-class ClienteApp(ctk.CTk):
-    def __init__(self):
-        super().__init__()
+class ClienteApp(ctk.CTkToplevel):
+    def __init__(self, master=None):
+        super().__init__(master)
         self.title("Tienda de Menús - Cliente")
         self.geometry("900x700")
 
@@ -129,7 +129,3 @@ class ClienteApp(ctk.CTk):
                 messagebox.showerror("Error", "El cliente ya existe.")
 
         ctk.CTkButton(ventana, text="Guardar", command=guardar_cliente).pack(pady=10)
-
-if __name__ == "__main__":
-    app = ClienteApp()
-    app.mainloop()

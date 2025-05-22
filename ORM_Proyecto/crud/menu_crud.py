@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models import Menu, MenuIngrediente, Ingrediente
+from models.models import Menu, MenuIngrediente, Ingrediente
 
 class MenuCRUD:
     @staticmethod
@@ -32,7 +32,6 @@ class MenuCRUD:
         # Obtener todos los menús con sus ingredientes
         menus = db.query(Menu).all()
         for menu in menus:
-            print(f"Menú: {menu.nombre} - Descripción: {menu.descripcion}")
             for menu_ingrediente in menu.menu_ingredientes:
                 ingrediente = db.query(Ingrediente).filter_by(nombre=menu_ingrediente.ingrediente_nombre).first()
                 print(f"- Ingrediente: {ingrediente.nombre}, Cantidad: {menu_ingrediente.cantidad}")

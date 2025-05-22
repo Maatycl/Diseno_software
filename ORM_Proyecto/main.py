@@ -1,7 +1,7 @@
 import customtkinter as ctk
-from interfaz_app import InterfazApp
-from logica_app import LogicaApp
-from database import Base, engine
+from interfaces.interfaz_app import InterfazApp
+from logicas.logica_app import LogicaApp
+from data.database import Base, engine
 
 class App(ctk.CTk):
     def __init__(self):
@@ -9,15 +9,13 @@ class App(ctk.CTk):
         self.title("Gestión de Clientes, Pedidos y Menús")
         self.geometry("1450x600")
 
-        # Instanciar lógica y GUI
         self.logica = LogicaApp()
         self.interfaz = InterfazApp(self)
 
-        # Crear pestañas
         self.tabview = ctk.CTkTabview(self)
-        self.tabview.pack(pady=20, padx=20, fill="both", expand=True)
+        self.tabview.pack(pady=10, padx=20, fill="both", expand=True)
 
-        # Crear formularios en las pestañas
+        # Pestañas y formularios
         self.tab_ingredientes = self.tabview.add("Ingredientes")
         self.interfaz.crear_formulario_ingrediente(self.tab_ingredientes)
 
@@ -38,11 +36,6 @@ class App(ctk.CTk):
 
         self.tab_estado = self.tabview.add("Estados Pedido")
         self.interfaz.crear_panel_estado_pedido(self.tab_estado)
-
-
-
-        #self.tab_graficos = self.tabview.add("Gráficos")
-        #self.interfaz.crear_formulario_grafico(self.tab_graficos)
 
     Base.metadata.create_all(bind=engine)
 
